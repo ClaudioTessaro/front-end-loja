@@ -4,13 +4,25 @@ import Route from './Route';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
+import VisualizarProdutos from '../pages/produtos/visualizarProdutos';
+import CadastrarEditarProdutos from '../pages/produtos/cadastrarEditarProdutos';
 
 export default function Routes() {
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
-      <Route path="/registrar" exact component={SignUp} />
+      <Route path="/registrar" component={SignUp} />
       <Route path="/dashboard" component={Dashboard} isPrivate />
+      <Route
+        path="/cadastrarProdutos"
+        component={CadastrarEditarProdutos}
+        isPrivate
+      />
+      <Route
+        path="/visualizarProdutos"
+        component={VisualizarProdutos}
+        isPrivate
+      />
     </Switch>
   );
 }
