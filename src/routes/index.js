@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard';
 import VisualizarProdutos from '../pages/produtos/visualizarProdutos';
 import CadastrarEditarProdutos from '../pages/produtos/cadastrarEditarProdutos';
 import CadastrarTipoProdutos from '../pages/produtos/tipoProduto';
+import EditarTipoProdutos from '../pages/produtos/tipoProduto/editarTipo';
 
 export default function Routes() {
   return (
@@ -25,6 +26,7 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/tipoProdutos" component={CadastrarTipoProdutos} isPrivate />
+      <Route path="/t" component={EditarTipoProdutos} isPrivate />
     </Switch>
   );
 }

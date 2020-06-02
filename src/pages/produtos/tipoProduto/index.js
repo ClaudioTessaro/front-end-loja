@@ -2,15 +2,17 @@
 import React, { useState, useEffect } from 'react';
 import { BsPencil, BsFillTrashFill } from 'react-icons/bs';
 import { Form } from '@unform/web';
+import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
+import history from '../../../services/history';
 import Layout from '../../../components/Layout_Basico';
 import Input from '../../../components/Formulario/Input';
 import api from '../../../services/api';
 
 import { ButtonStyle } from '../visualizarProdutos/styles';
-import { Tabela } from './styles';
+
+import { Tab } from './styles';
 
 export default function CadastrarTipoProduto() {
   const [tipoProduto, setTipoProduto] = useState([]);
@@ -21,6 +23,7 @@ export default function CadastrarTipoProduto() {
       setTipoProduto(response.data);
     }
     loadTipo();
+    history.push('/tipoProdutos');
   }, []);
 
   async function handleSubmit(data, { reset }) {
@@ -33,8 +36,16 @@ export default function CadastrarTipoProduto() {
     }
   }
 
+  async function handleDelete(id) {
+    try {
+      await api.delete(`tipoProduto/${id}`);
+      toast.success('Tipo de Produto deletado com sucesso');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
   return (
-    <Layout titulo="CadastrarTipoProduto">
+    <Layout titulo="Cadastrar Tipo Produto">
       <Form onSubmit={handleSubmit}>
         <div className="form-group col-md-4">
           <Input
@@ -68,40 +79,38 @@ export default function CadastrarTipoProduto() {
             Voltar
           </Button>
         </Link>
-      </Form>
-      <Tabela>
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">Codigo</th>
-              <th scope="col">Nome do Produto</th>
-              <th scope="col">Editar</th>
-              <th scope="col">Excluir</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tipoProduto.map(tipo => {
-              return (
+        <Tab>
+          <table className="table">
+            <caption>Lista dos tipos de Produtos</caption>
+            <thead>
+              <tr>
+                <th scope="col">Codigo</th>
+                <th scope="col">Tipo de Produto</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Excluir</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tipoProduto.map(tipo => (
                 <tr>
-                  <th scope="row">{tipo.id}</th>
-                  <th scope="row">{tipo.nome}</th>
-                  <th scope="row">
+                  <td>{tipo.id}</td>
+                  <td>{tipo.nome}</td>
+                  <td>
                     <button type="button">
                       <BsPencil size={20} />
                     </button>
-                  </th>
-                  <th scope="row">
-                    <button type="button">
+                  </td>
+                  <td>
+                    <button type="button" onClick={() => handleDelete(tipo.id)}>
                       <BsFillTrashFill size={20} />
                     </button>
-                  </th>
+                  </td>
                 </tr>
-              );
-            })}
-          </tbody>
-          ;
-        </table>
-      </Tabela>
+              ))}
+            </tbody>
+          </table>
+        </Tab>
+      </Form>
     </Layout>
   );
 }

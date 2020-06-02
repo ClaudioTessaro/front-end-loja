@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
-export const Tab = styled.div`
-  margin-top: 70px;
-
+export const Botoes = styled.div`
   button {
     background: none;
     border: 0;
