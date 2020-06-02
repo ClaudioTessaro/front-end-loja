@@ -44,6 +44,9 @@ export default function Header() {
             <DropdownItem as={Link} to="cadastrarProdutos">
               Cadastrar Produtos
             </DropdownItem>
+            <DropdownItem as={Link} to="tipoProdutos">
+              Tipo de Produtos
+            </DropdownItem>
           </DropdownButton>
           <DropdownItem>
             <IconButton onClick={handleLogout}>

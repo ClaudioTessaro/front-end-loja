@@ -13,6 +13,7 @@ export default function Layout({ children, titulo }) {
 }
 
 Layout.propTypes = {
-  children: PropTypes.element.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  children: PropTypes.array.isRequired,
   titulo: PropTypes.string.isRequired,
 };

@@ -3,7 +3,7 @@ import { darken } from 'polished';
 
 export const Wrapper = styled.div`
   height: 100%;
-  background: #e9ecef;
+  background: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,12 +20,12 @@ export const Content = styled.div`
   }
 
   form {
-    background: rgb(200, 200, 200);
+    background: #e9ecef;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
     height: 350px;
-    border: 0;
+    border: 1px;
     border-radius: 15px;
 
     input {
