@@ -1,29 +1,39 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Form } from '@unform/web';
 import Button from 'react-bootstrap/Button';
-import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
 import Layout from '../../../../components/Layout_Basico';
 import Input from '../../../../components/Formulario/Input';
-import api from '../../../../services/api';
 import { ButtonStyle } from '../../visualizarProdutos/styles';
 
-export default function EditarTipoProdutos() {
-  async function handleUpdate(data, { reset }) {
+import api from '../../../../services/api';
+
+export default function EditarTipoProdutos(path) {
+  const [produto, setProduto] = useState([]);
+  const { id } = path.match.params;
+
+  useEffect(() => {
+    async function tipoProdutos() {
+      const response = await api.get(`/tipoProduto/${id}`);
+      setProduto(response.data);
+    }
+    tipoProdutos();
+  });
+
+  async function handleUpdate(data) {
     try {
-      await api.post('tipoProduto', data);
-      toast.success('Tipo de Produto cadastrado com sucesso');
-      reset();
+      await api.put(`/tipoProduto/${id}`, data);
+      toast.success('Tipo de produto atualizado com sucesso');
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err);
     }
   }
 
   return (
-    <Layout titulo="Cadastrar Tipo Produto">
-      <Form onSubmit={handleUpdate}>
+    <Layout titulo="Editar o  Tipo Produto">
+      <Form initialData={produto} onSubmit={handleUpdate}>
         <div className="form-group col-md-4">
           <Input
             ype="text"
@@ -46,7 +56,7 @@ export default function EditarTipoProdutos() {
             Enviar
           </Button>
         </ButtonStyle>
-        <Link to="/visualizarProdutos">
+        <Link to="/tipoProdutos">
           <Button
             style={({ height: '40px' }, { margin: '2px 0px' })}
             variant="success"

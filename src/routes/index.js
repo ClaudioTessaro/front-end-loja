@@ -26,7 +26,11 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/tipoProdutos" component={CadastrarTipoProdutos} isPrivate />
-      <Route path="/t" component={EditarTipoProdutos} isPrivate />
+      <Route
+        path="/editarTipoProdutos/:id"
+        component={EditarTipoProdutos}
+        isPrivate
+      />
     </Switch>
   );
 }

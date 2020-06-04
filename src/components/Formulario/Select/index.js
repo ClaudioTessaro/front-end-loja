@@ -2,8 +2,9 @@
 import React, { useRef, useEffect } from 'react';
 import { useField } from '@unform/core';
 import PropTypes from 'prop-types';
+import Option from './Option';
 
-export default function Select({ name, children, label, ...rest }) {
+export default function Select({ name, data, label, ...rest }) {
   const inputRef = useRef(null);
   const { fieldName, registerField } = useField(name);
 
@@ -19,14 +20,14 @@ export default function Select({ name, children, label, ...rest }) {
     <>
       <label htmlFor={fieldName}>{label}</label>
       <select name={fieldName} ref={inputRef} {...rest}>
-        {children}
+        <Option data={data} />
       </select>
     </>
   );
 }
 
 Select.propTypes = {
-  children: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
 };

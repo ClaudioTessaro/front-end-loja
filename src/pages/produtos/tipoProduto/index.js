@@ -1,14 +1,16 @@
 /* eslint-disable no-unused-expressions */
 import React, { useState, useEffect } from 'react';
 import { BsPencil, BsFillTrashFill } from 'react-icons/bs';
+import { useDispatch } from 'react-redux';
 import { Form } from '@unform/web';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import history from '../../../services/history';
 import Layout from '../../../components/Layout_Basico';
 import Input from '../../../components/Formulario/Input';
 import api from '../../../services/api';
+
+import * as actions from '../../../store/modules/produtos/action';
 
 import { ButtonStyle } from '../visualizarProdutos/styles';
 
@@ -16,14 +18,19 @@ import { Tab } from './styles';
 
 export default function CadastrarTipoProduto() {
   const [tipoProduto, setTipoProduto] = useState([]);
+  const dispatch = useDispatch();
+
+  async function loadTipo() {
+    const response = await api.get('tipoProduto');
+    setTipoProduto(response.data);
+  }
+
+  function handleUpdate(id) {
+    dispatch(actions.updateProdutoRequest(id));
+  }
 
   useEffect(() => {
-    async function loadTipo() {
-      const response = await api.get('tipoProduto');
-      setTipoProduto(response.data);
-    }
     loadTipo();
-    history.push('/tipoProdutos');
   }, []);
 
   async function handleSubmit(data, { reset }) {
@@ -92,11 +99,11 @@ export default function CadastrarTipoProduto() {
             </thead>
             <tbody>
               {tipoProduto.map(tipo => (
-                <tr>
+                <tr key={tipo.id}>
                   <td>{tipo.id}</td>
                   <td>{tipo.nome}</td>
                   <td>
-                    <button type="button">
+                    <button type="button" onClick={() => handleUpdate(tipo.id)}>
                       <BsPencil size={20} />
                     </button>
                   </td>

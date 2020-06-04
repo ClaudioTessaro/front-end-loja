@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -8,8 +8,19 @@ import queryString from 'query-string';
 import Layout from '../../../components/Layout_Basico';
 import { ButtonStyle } from './styles';
 
+import api from '../../../services/api';
+
 export default function VisualizarProdutos(props) {
+  const [tipoProduto, setTipoProduto] = useState([]);
   const history = useHistory();
+
+  useEffect(() => {
+    async function loadTipoProduto() {
+      const response = await api.get('/tipoProduto');
+      setTipoProduto(response.data);
+    }
+    loadTipoProduto();
+  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line no-unused-vars
@@ -38,8 +49,11 @@ export default function VisualizarProdutos(props) {
           <Form.Group as={Col} controlId="formGridTipo" sm={4}>
             <Form.Label>Tipo do Produto</Form.Label>
             <Form.Control as="select" name="tipo" custom>
-              <option>Tipo do Produto</option>
-              <option>1</option>
+              {tipoProduto.map(tipo => (
+                <option key={tipo.id} value={tipo.id}>
+                  {tipo.nome}
+                </option>
+              ))}
             </Form.Control>
           </Form.Group>
         </Form.Row>

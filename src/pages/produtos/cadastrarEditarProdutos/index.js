@@ -1,5 +1,7 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form } from '@unform/web';
 import { Scope } from '@unform/core';
 import { Link } from 'react-router-dom';
@@ -9,7 +11,19 @@ import Layout from '../../../components/Layout_Basico';
 import Input from '../../../components/Formulario/Input';
 import { ButtonStyle } from '../visualizarProdutos/styles';
 
+import api from '../../../services/api';
+
 export default function CadastrarEditarProdutos() {
+  const [tipoProduto, setTipoProduto] = useState([]);
+
+  useEffect(() => {
+    async function loadTipoProduto() {
+      const response = await api.get('/tipoProduto');
+      setTipoProduto(response.data);
+    }
+    loadTipoProduto();
+  }, []);
+
   function handleSubmit(data) {
     // eslint-disable-next-line no-console
     console.log(data);
@@ -46,11 +60,8 @@ export default function CadastrarEditarProdutos() {
                 id="inputState"
                 className="form-control"
                 label="Tipo do Produto"
-              >
-                <option value="1">Texto 1</option>
-                <option value="2">texto2</option>
-                <option value="3">texto 3</option>
-              </Select>
+                data={tipoProduto}
+              />
             </Scope>
           </div>
         </div>
