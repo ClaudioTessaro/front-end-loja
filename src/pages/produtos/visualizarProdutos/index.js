@@ -36,14 +36,16 @@ export default function VisualizarProdutos(props) {
 
   useEffect(() => {
     async function loadProdutos() {
-      //const { dataFim, dataInicio, nome, tipo } = queryString.parse(
-      //props.location.search
-      //);
-      const produtos = await api.get('/produtos');
+      const { dataFim, dataInicio, nome, tipo } = queryString.parse(
+        props.location.search
+      );
+      const produtos = await api.get(
+        `/produtos?nome=${nome}&ipo=${tipo}&dataInicio=${dataInicio}&dataFim=${dataFim}`
+      );
       setProduto(produtos.data);
     }
     loadProdutos();
-  }, []);
+  }, [props.location.search, tipoProduto]);
 
   async function handleDelete(id) {
     try {

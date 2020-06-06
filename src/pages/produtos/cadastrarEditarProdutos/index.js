@@ -38,12 +38,14 @@ export default function CadastrarEditarProdutos(path) {
   }, [id]);
 
   async function handleInsertSubmit(data, { reset }) {
+    console.log(data);
     await api.post('/produto', data);
     reset();
   }
 
   async function handleUpdateProduto(data) {
     try {
+      console.log(data);
       await api.put(`/produto/${id}`, data);
       toast.success('Produto atualizado com sucesso');
       history.push('/visualizarProdutos');
@@ -51,7 +53,7 @@ export default function CadastrarEditarProdutos(path) {
       toast.error(err);
     }
   }
-
+  console.log(url);
   return (
     <Layout
       titulo={
@@ -61,7 +63,9 @@ export default function CadastrarEditarProdutos(path) {
       <Form
         initialData={url === '/cadastrarProdutos' ? {} : produto}
         onSubmit={
-          url === '/cadastrarProduto' ? handleInsertSubmit : handleUpdateProduto
+          url === '/cadastrarProdutos'
+            ? handleInsertSubmit
+            : handleUpdateProduto
         }
       >
         <div className="form-row">
