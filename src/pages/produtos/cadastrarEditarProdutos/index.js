@@ -18,7 +18,7 @@ export default function CadastrarEditarProdutos(path) {
   const { id } = path.match.params;
   const [produto, setProduto] = useState([]);
 
-  const url = path.location.pathname;
+  const { pathname } = path.location;
 
   useEffect(() => {
     async function loadTipoProduto() {
@@ -31,21 +31,23 @@ export default function CadastrarEditarProdutos(path) {
   useEffect(() => {
     async function loadProduto() {
       const response = await api.get(`/produto/${id}`);
-
-      setProduto(response.data);
+      const { dataDaCompra } = response.data;
+      const dataCompra = dataDaCompra.split('T')[0];
+      setProduto({
+        ...response.data,
+        dataCompra,
+      });
     }
     loadProduto();
   }, [id]);
 
   async function handleInsertSubmit(data, { reset }) {
-    console.log(data);
     await api.post('/produto', data);
     reset();
   }
 
   async function handleUpdateProduto(data) {
     try {
-      console.log(data);
       await api.put(`/produto/${id}`, data);
       toast.success('Produto atualizado com sucesso');
       history.push('/visualizarProdutos');
@@ -53,17 +55,19 @@ export default function CadastrarEditarProdutos(path) {
       toast.error(err);
     }
   }
-  console.log(url);
+
   return (
     <Layout
       titulo={
-        url === '/cadastrarProdutos' ? 'Cadastrar Produto' : 'Editar Produto'
+        pathname === '/cadastrarProdutos'
+          ? 'Cadastrar Produto'
+          : 'Editar Produto'
       }
     >
       <Form
-        initialData={url === '/cadastrarProdutos' ? {} : produto}
+        initialData={pathname === '/cadastrarProdutos' ? {} : produto}
         onSubmit={
-          url === '/cadastrarProdutos'
+          pathname === '/cadastrarProdutos'
             ? handleInsertSubmit
             : handleUpdateProduto
         }
@@ -118,14 +122,18 @@ export default function CadastrarEditarProdutos(path) {
               name="quantidade"
               className="form-control"
               id="inputNome"
-              label="Quantidade"
+              label="Quantidade em Litros"
             />
           </div>
           <div className="form-group col-md-1" />
           <div className="form-group col-md-2">
             <Input
               type="date"
-              name="dataDaCompra"
+              name={
+                pathname === '/cadastrarProdutos'
+                  ? 'dataDaCompra'
+                  : 'dataCompra'
+              }
               className="form-control"
               id="dataDaCompra"
               label="Data da compra"
@@ -135,7 +143,6 @@ export default function CadastrarEditarProdutos(path) {
             <Input
               type="number"
               min="1"
-              max="100"
               name="porcentagemLucro"
               className="form-control"
               id="porcentagemLucro"

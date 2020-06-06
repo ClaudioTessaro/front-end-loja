@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { BsPencil, BsFillTrashFill } from 'react-icons/bs';
@@ -15,7 +16,7 @@ import * as actions from '../../../store/modules/produtos/action';
 
 import api from '../../../services/api';
 
-export default function VisualizarProdutos(props) {
+export default function VisualizarProdutos({ location }) {
   const [tipoProduto, setTipoProduto] = useState([]);
   const [produto, setProduto] = useState([]);
   const dispatch = useDispatch();
@@ -37,15 +38,16 @@ export default function VisualizarProdutos(props) {
   useEffect(() => {
     async function loadProdutos() {
       const { dataFim, dataInicio, nome, tipo } = queryString.parse(
-        props.location.search
+        location.search
       );
+
       const produtos = await api.get(
-        `/produtos?nome=${nome}&ipo=${tipo}&dataInicio=${dataInicio}&dataFim=${dataFim}`
+        `/produtos?nome=${nome}&tipo=${tipo}&dataInicio=${dataInicio}&dataFim=${dataFim}`
       );
       setProduto(produtos.data);
     }
     loadProdutos();
-  }, [props.location.search, tipoProduto]);
+  }, [location.search]);
 
   async function handleDelete(id) {
     try {
@@ -76,6 +78,7 @@ export default function VisualizarProdutos(props) {
           <Form.Group as={Col} controlId="formGridTipo" sm={4}>
             <Form.Label>Tipo do Produto</Form.Label>
             <Form.Control as="select" name="tipo" custom>
+              <option value="" />
               {tipoProduto.map(tipo => (
                 <option key={tipo.id} value={tipo.id}>
                   {tipo.nome}
@@ -117,9 +120,10 @@ export default function VisualizarProdutos(props) {
               <tr>
                 <th scope="col">Codigo</th>
                 <th scope="col">Nome do Produto</th>
-                <th scope="col">Quantidade do Produto</th>
+                <th scope="col">Quantidade do Produto Comprado</th>
                 <th scope="col">Marca do Produto</th>
                 <th scope="col">Tipo do Produto</th>
+                <th scope="col">Quantidade do Produto em Estoque</th>
                 <th scope="col">Valor de Venda</th>
                 <th scope="col">Editar</th>
                 <th scope="col">Excluir</th>
@@ -133,6 +137,7 @@ export default function VisualizarProdutos(props) {
                   <td>{prod.quantidade}</td>
                   <td>{prod.marcaProduto}</td>
                   <td>{prod.tipo.nome}</td>
+                  <td>{prod.quantidadeDeEstoque}</td>
                   <td>{prod.valorVenda}</td>
                   <td>
                     <button type="button" onClick={() => handleUpdate(prod.id)}>

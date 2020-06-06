@@ -21,7 +21,7 @@ export default function EditarTipoProdutos(path) {
       setProduto(response.data);
     }
     tipoProdutos();
-  }, []);
+  }, [id]);
 
   async function handleUpdate(data) {
     try {
