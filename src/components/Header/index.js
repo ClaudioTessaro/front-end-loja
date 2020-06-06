@@ -38,13 +38,13 @@ export default function Header() {
             drop="right"
             title="Produtos"
           >
-            <DropdownItem as={Link} to="visualizarProdutos">
+            <DropdownItem as={Link} to="/visualizarProdutos">
               Pesquisar Produtos
             </DropdownItem>
-            <DropdownItem as={Link} to="cadastrarProdutos">
+            <DropdownItem as={Link} to="/cadastrarProdutos">
               Cadastrar Produtos
             </DropdownItem>
-            <DropdownItem as={Link} to="tipoProdutos">
+            <DropdownItem as={Link} to="/tipoProdutos">
               Tipo de Produtos
             </DropdownItem>
           </DropdownButton>

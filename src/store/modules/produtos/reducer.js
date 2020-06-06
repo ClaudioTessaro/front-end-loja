@@ -12,6 +12,11 @@ export default function produto(state = INITIAL_STATE, action) {
         draft.id = action.id;
         break;
       }
+      case '@produto/UPDATE_PRODUTO': {
+        console.log(action.id);
+        draft.id = action.id;
+        break;
+      }
 
       default:
         return state;

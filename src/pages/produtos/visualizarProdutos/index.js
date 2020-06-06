@@ -1,18 +1,30 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
+import { BsPencil, BsFillTrashFill } from 'react-icons/bs';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import queryString from 'query-string';
 import Layout from '../../../components/Layout_Basico';
-import { ButtonStyle } from './styles';
+import { ButtonStyle, Tab } from './styles';
+
+import * as actions from '../../../store/modules/produtos/action';
 
 import api from '../../../services/api';
 
 export default function VisualizarProdutos(props) {
   const [tipoProduto, setTipoProduto] = useState([]);
+  const [produto, setProduto] = useState([]);
+  const dispatch = useDispatch();
+
   const history = useHistory();
+
+  function handleUpdate(id) {
+    dispatch(actions.updateProduto(id));
+  }
 
   useEffect(() => {
     async function loadTipoProduto() {
@@ -23,11 +35,24 @@ export default function VisualizarProdutos(props) {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line no-unused-vars
-    const { dataFim, dataInicio, nome, tipo } = queryString.parse(
-      props.location.search
-    );
-  }, [props]);
+    async function loadProdutos() {
+      //const { dataFim, dataInicio, nome, tipo } = queryString.parse(
+      //props.location.search
+      //);
+      const produtos = await api.get('/produtos');
+      setProduto(produtos.data);
+    }
+    loadProdutos();
+  }, []);
+
+  async function handleDelete(id) {
+    try {
+      await api.delete(`produto/${id}`);
+      toast.success('Tipo de Produto deletado com sucesso');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
 
   function handleInsert() {
     history.push('/cadastrarProdutos');
@@ -83,6 +108,48 @@ export default function VisualizarProdutos(props) {
             Enviar
           </Button>
         </ButtonStyle>
+        <Tab>
+          <table className="table">
+            <caption>Lista dos tipos de Produtos</caption>
+            <thead>
+              <tr>
+                <th scope="col">Codigo</th>
+                <th scope="col">Nome do Produto</th>
+                <th scope="col">Quantidade do Produto</th>
+                <th scope="col">Marca do Produto</th>
+                <th scope="col">Tipo do Produto</th>
+                <th scope="col">Valor de Venda</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Excluir</th>
+              </tr>
+            </thead>
+            <tbody>
+              {produto.map(prod => (
+                <tr key={prod.id}>
+                  <td>{prod.id}</td>
+                  <td>{prod.nome}</td>
+                  <td>{prod.quantidade}</td>
+                  <td>{prod.marcaProduto}</td>
+                  <td>{prod.tipo.nome}</td>
+                  <td>{prod.valorVenda}</td>
+                  <td>
+                    <button type="button" onClick={() => handleUpdate(prod.id)}>
+                      <BsPencil size={20} />
+                    </button>
+                  </td>
+                  <td>
+                    <button type="button">
+                      <BsFillTrashFill
+                        size={20}
+                        onClick={() => handleDelete(prod.id)}
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Tab>
       </Form>
     </Layout>
   );

@@ -20,6 +20,12 @@ export default function Routes() {
         component={CadastrarEditarProdutos}
         isPrivate
       />
+
+      <Route
+        path="/editarProdutos/:id"
+        component={CadastrarEditarProdutos}
+        isPrivate
+      />
       <Route
         path="/visualizarProdutos"
         component={VisualizarProdutos}

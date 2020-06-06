@@ -12,6 +12,16 @@ export function* updateTipoProduto({ id }) {
   }
 }
 
+// eslint-disable-next-line require-yield
+export function* updateProduto({ id }) {
+  try {
+    history.push(`/editarProdutos/${id}`);
+  } catch (err) {
+    toast.error('Erro ao atualizar tipo de produto, confira seus dados!');
+  }
+}
+
 export default all([
   takeLatest('@produto/UPDATE_PRODUTO_REQUEST', updateTipoProduto),
+  takeLatest('@produto/UPDATE_PRODUTO', updateProduto),
 ]);

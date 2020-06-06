@@ -9,6 +9,7 @@ import Input from '../../../../components/Formulario/Input';
 import { ButtonStyle } from '../../visualizarProdutos/styles';
 
 import api from '../../../../services/api';
+import history from '../../../../services/history';
 
 export default function EditarTipoProdutos(path) {
   const [produto, setProduto] = useState([]);
@@ -20,12 +21,13 @@ export default function EditarTipoProdutos(path) {
       setProduto(response.data);
     }
     tipoProdutos();
-  });
+  }, []);
 
   async function handleUpdate(data) {
     try {
       await api.put(`/tipoProduto/${id}`, data);
       toast.success('Tipo de produto atualizado com sucesso');
+      history.push('/tipoProdutos');
     } catch (err) {
       toast.error(err);
     }
