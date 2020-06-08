@@ -110,7 +110,7 @@ export default function VisualizarProdutos({ location }) {
             Incluir
           </Button>
           <Button variant="primary" size="lg" type="submit">
-            Enviar
+            Pesquisa
           </Button>
         </ButtonStyle>
         <Tab>

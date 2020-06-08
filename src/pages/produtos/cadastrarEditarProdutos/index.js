@@ -15,8 +15,8 @@ import api from '../../../services/api';
 
 export default function CadastrarEditarProdutos(path) {
   const [tipoProduto, setTipoProduto] = useState([]);
-  const { id } = path.match.params;
   const [produto, setProduto] = useState([]);
+  const { id } = path.match.params;
 
   const { pathname } = path.location;
 
@@ -39,7 +39,7 @@ export default function CadastrarEditarProdutos(path) {
       });
     }
     loadProduto();
-  }, [id]);
+  }, []);
 
   async function handleInsertSubmit(data, { reset }) {
     await api.post('/produto', data);
@@ -122,7 +122,7 @@ export default function CadastrarEditarProdutos(path) {
               name="quantidade"
               className="form-control"
               id="inputNome"
-              label="Quantidade em Litros"
+              label="Quantidade"
             />
           </div>
           <div className="form-group col-md-1" />
@@ -158,6 +158,28 @@ export default function CadastrarEditarProdutos(path) {
               className="form-control"
               id="valorVenda"
               label="Valor de venda"
+              step="any"
+            />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-md-2">
+            <Input
+              type="number"
+              name="valorPote"
+              className="form-control"
+              id="valorPote"
+              label="Valor do pote"
+              step="any"
+            />
+          </div>
+          <div className="form-group col-md-2">
+            <Input
+              type="number"
+              name="frete"
+              className="form-control"
+              id="inputNome"
+              label="Frete"
               step="any"
             />
           </div>
