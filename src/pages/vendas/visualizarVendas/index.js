@@ -32,6 +32,7 @@ export default function VisualizarVendas() {
       data,
       { nomeCliente: autoCompleteCliente[0] },
     ];
+
     const vendas = await api.get(`cliente/${nomeCliente}/${dataCompra}`);
     setListaProdutos(vendas.data);
 
@@ -49,7 +50,7 @@ export default function VisualizarVendas() {
               labelKey="name"
               options={clientes.map(cliente => cliente.nome)}
               onChange={e => setAutoCompleteCliente(e)}
-              minLength={2}
+              minLength={1}
               emptyLabel="Sem resultados"
             />
           </div>

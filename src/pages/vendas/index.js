@@ -89,7 +89,7 @@ export default function Venda() {
               labelKey="name"
               options={clientes.map(cliente => cliente.nome)}
               onChange={e => setAutoCompleteCliente(e)}
-              minLength={2}
+              minLength={1}
               emptyLabel="Sem resultados"
             />
           </div>
@@ -101,7 +101,7 @@ export default function Venda() {
               labelKey="produtos"
               options={produtos.map(produto => produto.nome)}
               onChange={e => setAutoCompleteProduto(e)}
-              minLength={2}
+              minLength={1}
               emptyLabel="Sem resultados"
             />
           </div>

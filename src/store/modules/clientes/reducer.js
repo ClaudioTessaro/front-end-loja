@@ -4,15 +4,11 @@ const INITIAL_STATE = {
   id: null,
 };
 
-export default function produto(state = INITIAL_STATE, action) {
+export default function cliente(state = INITIAL_STATE, action) {
   // eslint-disable-next-line consistent-return
   return produce(state, draft => {
     switch (action.type) {
-      case '@produto/UPDATE_PRODUTO_REQUEST': {
-        draft.id = action.id;
-        break;
-      }
-      case '@produto/UPDATE_PRODUTO': {
+      case '@cliente/UPDATE_CLIENTE': {
         draft.id = action.id;
         break;
       }

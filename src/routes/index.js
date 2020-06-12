@@ -11,6 +11,7 @@ import EditarTipoProdutos from '../pages/produtos/tipoProduto/editarTipo';
 import Cliente from '../pages/vendas/cliente';
 import Venda from '../pages/vendas';
 import VisualizarVendas from '../pages/vendas/visualizarVendas';
+import VisualizarClientes from '../pages/vendas/cliente/visualizarClientes';
 
 export default function Routes() {
   return (
@@ -41,8 +42,14 @@ export default function Routes() {
         isPrivate
       />
       <Route path="/cliente" component={Cliente} isPrivate />
+      <Route path="/editarCliente/:id" component={Cliente} isPrivate />
       <Route path="/venda" component={Venda} isPrivate />
       <Route path="/visualizarVendas" component={VisualizarVendas} isPrivate />
+      <Route
+        path="/visualizarClientes"
+        component={VisualizarClientes}
+        isPrivate
+      />
     </Switch>
   );
 }
