@@ -5,6 +5,6 @@ export const Wrapper = styled.div`
   background: #e9ecef;
 
   @media screen and (max-device-width: 420px) {
-    height: 140%;
+    height: 160%;
   }
 `;
