@@ -7,6 +7,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import HomeIcon from '@material-ui/icons/Home';
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
 
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -48,6 +49,26 @@ export default function Header() {
               Tipo de Produtos
             </DropdownItem>
           </DropdownButton>
+          <DropdownButton
+            variant="Secondary"
+            id="button-drop-right"
+            drop="right"
+            title="Cliente"
+          >
+            <DropdownItem as={Link} to="/cliente">
+              Cadastrar Cliente
+            </DropdownItem>
+          </DropdownButton>
+          <Link to="/venda">
+            <Button
+              variant="Secondary"
+              id="button-drop-right"
+              drop="right"
+              title="Venda"
+            >
+              Venda
+            </Button>
+          </Link>
           <DropdownItem>
             <IconButton onClick={handleLogout}>
               <ExitToAppOutlinedIcon />

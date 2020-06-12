@@ -39,7 +39,7 @@ export default function CadastrarEditarProdutos(path) {
       });
     }
     loadProduto();
-  }, []);
+  }, [id]);
 
   async function handleInsertSubmit(data, { reset }) {
     await api.post('/produto', data);

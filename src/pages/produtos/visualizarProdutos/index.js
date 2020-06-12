@@ -115,7 +115,7 @@ export default function VisualizarProdutos({ location }) {
         </ButtonStyle>
         <Tab>
           <table className="table">
-            <caption>Lista dos tipos de Produtos</caption>
+            <caption>Lista dos Produtos</caption>
             <thead>
               <tr>
                 <th scope="col">Codigo</th>

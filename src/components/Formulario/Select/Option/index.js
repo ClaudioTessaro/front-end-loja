@@ -6,7 +6,10 @@ export default function Option({ data }) {
   return (
     <>
       {data.map(valores => (
-        <option key={valores.id} value={valores.id}>
+        <option
+          key={valores[0]}
+          value={valores.id !== undefined ? valores.id : valores[0]}
+        >
           {valores.nome}
         </option>
       ))}
