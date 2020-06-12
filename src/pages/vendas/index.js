@@ -154,53 +154,55 @@ export default function Venda() {
           </Button>
         </Link>
         <Tab>
-          <table className="table">
-            <caption>Lista dos Produtos Comprados</caption>
-            <thead>
-              <tr>
-                <th scope="col">Nome do cliente</th>
-                <th scope="col">Nome do Produto</th>
-                <th scope="col">Quantidade do Produto Comprado</th>
-                <th scope="col">Data da compra</th>
-                <th scope="col">Valor de Venda</th>
-                <th scope="col">Status</th>
-                <th scope="col">Editar</th>
-                <th scope="col">Excluir</th>
-              </tr>
-            </thead>
-            <tbody>
-              {listaProdutos.map(item => (
-                <tr key={item.id}>
-                  <td>{item.cliente.nome}</td>
-                  <td>{item.produto.nome}</td>
-                  <td>{item.quantidadeDeCompra}</td>
-                  <td>{format(parseISO(item.dataDaCompra), 'dd/MM/yyyy')}</td>
-                  <td>{item.valorVenda}</td>
-                  <td>{item.status}</td>
-                  <td>
-                    <button type="button">
-                      <BsPencil size={20} />
-                    </button>
-                  </td>
-                  <td>
-                    <button type="button">
-                      <BsFillTrashFill size={20} />
-                    </button>
-                  </td>
+          <div className="table-responsive">
+            <table className="table">
+              <caption>Lista dos Produtos Comprados</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nome do cliente</th>
+                  <th scope="col">Nome do Produto</th>
+                  <th scope="col">Quantidade do Produto Comprado</th>
+                  <th scope="col">Data da compra</th>
+                  <th scope="col">Valor de Venda</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Editar</th>
+                  <th scope="col">Excluir</th>
                 </tr>
-              ))}
-              {listaProdutos.length === 0 ? '' : <td colSpan={4}>Total</td>}
-              {listaProdutos.length === 0 ? (
-                ''
-              ) : (
-                <td>
-                  {listaProdutos
-                    .reduce((total, item) => total + item.valorVenda, 0)
-                    .toFixed(2)}
-                </td>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {listaProdutos.map(item => (
+                  <tr key={item.id}>
+                    <td>{item.cliente.nome}</td>
+                    <td>{item.produto.nome}</td>
+                    <td>{item.quantidadeDeCompra}</td>
+                    <td>{format(parseISO(item.dataDaCompra), 'dd/MM/yyyy')}</td>
+                    <td>{item.valorVenda}</td>
+                    <td>{item.status}</td>
+                    <td>
+                      <button type="button">
+                        <BsPencil size={20} />
+                      </button>
+                    </td>
+                    <td>
+                      <button type="button">
+                        <BsFillTrashFill size={20} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {listaProdutos.length === 0 ? '' : <td colSpan={4}>Total</td>}
+                {listaProdutos.length === 0 ? (
+                  ''
+                ) : (
+                  <td>
+                    {listaProdutos
+                      .reduce((total, item) => total + item.valorVenda, 0)
+                      .toFixed(2)}
+                  </td>
+                )}
+              </tbody>
+            </table>
+          </div>
         </Tab>
       </Form>
     </Layout>

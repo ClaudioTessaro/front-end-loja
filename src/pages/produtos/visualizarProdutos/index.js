@@ -114,48 +114,53 @@ export default function VisualizarProdutos({ location }) {
           </Button>
         </ButtonStyle>
         <Tab>
-          <table className="table">
-            <caption>Lista dos Produtos</caption>
-            <thead>
-              <tr>
-                <th scope="col">Codigo</th>
-                <th scope="col">Nome do Produto</th>
-                <th scope="col">Quantidade do Produto Comprado</th>
-                <th scope="col">Marca do Produto</th>
-                <th scope="col">Tipo do Produto</th>
-                <th scope="col">Quantidade do Produto em Estoque</th>
-                <th scope="col">Valor de Venda</th>
-                <th scope="col">Editar</th>
-                <th scope="col">Excluir</th>
-              </tr>
-            </thead>
-            <tbody>
-              {produto.map(prod => (
-                <tr key={prod.id}>
-                  <td>{prod.id}</td>
-                  <td>{prod.nome}</td>
-                  <td>{prod.quantidade}</td>
-                  <td>{prod.marcaProduto}</td>
-                  <td>{prod.tipo.nome}</td>
-                  <td>{prod.quantidadeDeEstoque}</td>
-                  <td>{prod.valorVenda}</td>
-                  <td>
-                    <button type="button" onClick={() => handleUpdate(prod.id)}>
-                      <BsPencil size={20} />
-                    </button>
-                  </td>
-                  <td>
-                    <button type="button">
-                      <BsFillTrashFill
-                        size={20}
-                        onClick={() => handleDelete(prod.id)}
-                      />
-                    </button>
-                  </td>
+          <div className="table-responsive">
+            <table className="table">
+              <caption>Lista dos Produtos</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Codigo</th>
+                  <th scope="col">Nome do Produto</th>
+                  <th scope="col">Quantidade do Produto Comprado</th>
+                  <th scope="col">Marca do Produto</th>
+                  <th scope="col">Tipo do Produto</th>
+                  <th scope="col">Quantidade do Produto em Estoque</th>
+                  <th scope="col">Valor de Venda</th>
+                  <th scope="col">Editar</th>
+                  <th scope="col">Excluir</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {produto.map(prod => (
+                  <tr key={prod.id}>
+                    <td>{prod.id}</td>
+                    <td>{prod.nome}</td>
+                    <td>{prod.quantidade}</td>
+                    <td>{prod.marcaProduto}</td>
+                    <td>{prod.tipo.nome}</td>
+                    <td>{prod.quantidadeDeEstoque}</td>
+                    <td>{prod.valorVenda}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => handleUpdate(prod.id)}
+                      >
+                        <BsPencil size={20} />
+                      </button>
+                    </td>
+                    <td>
+                      <button type="button">
+                        <BsFillTrashFill
+                          size={20}
+                          onClick={() => handleDelete(prod.id)}
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Tab>
       </Form>
     </Layout>

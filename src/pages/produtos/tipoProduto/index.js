@@ -87,35 +87,43 @@ export default function CadastrarTipoProduto() {
           </Button>
         </Link>
         <Tab>
-          <table className="table">
-            <caption>Lista dos tipos de Produtos</caption>
-            <thead>
-              <tr>
-                <th scope="col">Codigo</th>
-                <th scope="col">Tipo de Produto</th>
-                <th scope="col">Editar</th>
-                <th scope="col">Excluir</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tipoProduto.map(tipo => (
-                <tr key={tipo.id}>
-                  <td>{tipo.id}</td>
-                  <td>{tipo.nome}</td>
-                  <td>
-                    <button type="button" onClick={() => handleUpdate(tipo.id)}>
-                      <BsPencil size={20} />
-                    </button>
-                  </td>
-                  <td>
-                    <button type="button" onClick={() => handleDelete(tipo.id)}>
-                      <BsFillTrashFill size={20} />
-                    </button>
-                  </td>
+          <div className="table-responsive">
+            <table className="table">
+              <caption>Lista dos tipos de Produtos</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Codigo</th>
+                  <th scope="col">Tipo de Produto</th>
+                  <th scope="col">Editar</th>
+                  <th scope="col">Excluir</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tipoProduto.map(tipo => (
+                  <tr key={tipo.id}>
+                    <td>{tipo.id}</td>
+                    <td>{tipo.nome}</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => handleUpdate(tipo.id)}
+                      >
+                        <BsPencil size={20} />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(tipo.id)}
+                      >
+                        <BsFillTrashFill size={20} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Tab>
       </Form>
     </Layout>
