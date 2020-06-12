@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { BsPencil, BsFillTrashFill } from 'react-icons/bs';
 import { format, parseISO } from 'date-fns';
+import { toast } from 'react-toastify';
 import { Form } from '@unform/web';
 import { Link } from 'react-router-dom';
 import { Typeahead } from 'react-bootstrap-typeahead';
@@ -65,9 +66,16 @@ export default function Venda() {
 
     const cliente = await api.get(`cliente/${nomeCliente}/${dataCompra}`);
     setListaProdutos(cliente.data);
-    console.log(cliente.data);
-
     reset();
+  }
+
+  async function handleDelete(id) {
+    try {
+      await api.delete(`venda/${id}`);
+      toast.success('Venda deletada com sucesso');
+    } catch (err) {
+      toast.error(err.message);
+    }
   }
 
   return (
@@ -143,7 +151,7 @@ export default function Venda() {
             Enviar
           </Button>
         </ButtonStyle>
-        <Link to="/visualizarProdutos">
+        <Link to="/visualizarVendas">
           <Button
             style={({ height: '40px' }, { margin: '7px 0px' })}
             variant="success"
@@ -185,7 +193,10 @@ export default function Venda() {
                     </td>
                     <td>
                       <button type="button">
-                        <BsFillTrashFill size={20} />
+                        <BsFillTrashFill
+                          size={20}
+                          onClick={() => handleDelete(item.id)}
+                        />
                       </button>
                     </td>
                   </tr>
