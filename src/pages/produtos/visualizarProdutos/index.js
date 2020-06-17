@@ -150,7 +150,7 @@ export default function VisualizarProdutos({ location }) {
                     <td>{prod.marcaProduto}</td>
                     <td>{prod.tipo.nome}</td>
                     <td>{prod.quantidadeDeEstoque}</td>
-                    <td>{prod.valorVenda}</td>
+                    <td>{parseFloat(prod.valorVenda).toFixed(2)}</td>
                     <td>
                       <button
                         type="button"
