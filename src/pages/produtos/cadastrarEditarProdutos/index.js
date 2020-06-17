@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { Form } from '@unform/web';
-import { Scope } from '@unform/core';
-import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import Select from '../../../components/Formulario/Select';
-import Layout from '../../../components/Layout_Basico';
-import Input from '../../../components/Formulario/Input';
-import { ButtonStyle } from '../visualizarProdutos/styles';
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { Form } from "@unform/web";
+import { Scope } from "@unform/core";
+import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Select from "../../../components/Formulario/Select";
+import Layout from "../../../components/Layout_Basico";
+import Input from "../../../components/Formulario/Input";
+import { ButtonStyle } from "../visualizarProdutos/styles";
 
-import history from '../../../services/history';
+import history from "../../../services/history";
 
-import api from '../../../services/api';
+import api from "../../../services/api";
 
 export default function CadastrarEditarProdutos(path) {
   const [tipoProduto, setTipoProduto] = useState([]);
   const [produto, setProduto] = useState([]);
+  const [visible, setVisible] = useState([]);
   const { id } = path.match.params;
 
   const { pathname } = path.location;
 
   useEffect(() => {
     async function loadTipoProduto() {
-      const response = await api.get('/tipoProduto');
+      const response = await api.get("/tipoProduto");
       setTipoProduto(response.data);
     }
     loadTipoProduto();
   }, []);
-
   useEffect(() => {
     async function loadProduto() {
       const response = await api.get(`/produto/${id}`);
       const { dataDaCompra } = response.data;
-      const dataCompra = dataDaCompra.split('T')[0];
+      const dataCompra = dataDaCompra.split("T")[0];
       setProduto({
         ...response.data,
         dataCompra,
@@ -42,32 +42,40 @@ export default function CadastrarEditarProdutos(path) {
   }, [id]);
 
   async function handleInsertSubmit(data, { reset }) {
-    await api.post('/produto', data);
+    await api.post("/produto", data);
     reset();
   }
-
   async function handleUpdateProduto(data) {
     try {
       await api.put(`/produto/${id}`, data);
-      toast.success('Produto atualizado com sucesso');
-      history.push('/visualizarProdutos');
+      toast.success("Produto atualizado com sucesso");
+      history.push("/visualizarProdutos");
     } catch (err) {
       toast.error(err);
+    }
+  }
+
+  function handlVisible(e) {
+    const { options, selectedIndex } = e.target;
+    if (options[selectedIndex].innerHTML === "Escova") {
+      setVisible(true);
+    } else {
+      setVisible(false);
     }
   }
 
   return (
     <Layout
       titulo={
-        pathname === '/cadastrarProdutos'
-          ? 'Cadastrar Produto'
-          : 'Editar Produto'
+        pathname === "/cadastrarProdutos"
+          ? "Cadastrar Produto"
+          : "Editar Produto"
       }
     >
       <Form
-        initialData={pathname === '/cadastrarProdutos' ? {} : produto}
+        initialData={pathname === "/cadastrarProdutos" ? {} : produto}
         onSubmit={
-          pathname === '/cadastrarProdutos'
+          pathname === "/cadastrarProdutos"
             ? handleInsertSubmit
             : handleUpdateProduto
         }
@@ -101,6 +109,7 @@ export default function CadastrarEditarProdutos(path) {
                 className="form-control"
                 label="Tipo do Produto"
                 data={tipoProduto}
+                onChange={(e) => handlVisible(e)}
               />
             </Scope>
           </div>
@@ -130,9 +139,9 @@ export default function CadastrarEditarProdutos(path) {
             <Input
               type="date"
               name={
-                pathname === '/cadastrarProdutos'
-                  ? 'dataDaCompra'
-                  : 'dataCompra'
+                pathname === "/cadastrarProdutos"
+                  ? "dataDaCompra"
+                  : "dataCompra"
               }
               className="form-control"
               id="dataDaCompra"
@@ -171,6 +180,7 @@ export default function CadastrarEditarProdutos(path) {
               id="valorPote"
               label="Valor do pote"
               step="any"
+              disabled={visible}
             />
           </div>
           <div className="form-group col-md-2">
@@ -199,7 +209,7 @@ export default function CadastrarEditarProdutos(path) {
         </ButtonStyle>
         <Link to="/visualizarProdutos">
           <Button
-            style={({ height: '40px' }, { margin: '7px 0px' })}
+            style={({ height: "40px" }, { margin: "7px 0px" })}
             variant="success"
             size="lg"
             type="button"
