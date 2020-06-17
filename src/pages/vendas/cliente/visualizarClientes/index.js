@@ -33,10 +33,16 @@ export default function VisualizarClientes() {
     reset();
   }
 
+  async function loadRefresh() {
+    const response = await api.get('clientes');
+    setClientes(response.data);
+  }
+
   async function handleDelete(id) {
     try {
       await api.delete(`cliente/${id}`);
       toast.success('Cliente deletado com sucesso');
+      loadRefresh();
     } catch (err) {
       toast.error(err.message);
     }

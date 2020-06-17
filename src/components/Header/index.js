@@ -57,6 +57,9 @@ export default function Header() {
             <DropdownItem as={Link} to="/cliente">
               Cadastrar Cliente
             </DropdownItem>
+            <DropdownItem as={Link} to="/visualizarClientes">
+              Visualizar Clientes
+            </DropdownItem>
           </DropdownButton>
           <DropdownButton
             variant="Secondary"

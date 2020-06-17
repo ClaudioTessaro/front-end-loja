@@ -49,10 +49,21 @@ export default function VisualizarProdutos({ location }) {
     loadProdutos();
   }, [location.search]);
 
+  async function loadRefresh() {
+    const { dataFim, dataInicio, nome, tipo } = queryString.parse(
+      location.search
+    );
+    const response = await api.get(
+      `/produtos?nome=${nome}&tipo=${tipo}&dataInicio=${dataInicio}&dataFim=${dataFim}`
+    );
+    setProduto(response.data);
+  }
+
   async function handleDelete(id) {
     try {
       await api.delete(`produto/${id}`);
-      toast.success('Tipo de Produto deletado com sucesso');
+      toast.success('Produto deletado com sucesso');
+      loadRefresh();
     } catch (err) {
       toast.error(err.message);
     }

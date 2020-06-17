@@ -33,10 +33,16 @@ export default function CadastrarTipoProduto() {
     loadTipo();
   }, []);
 
+  async function loadRefresh() {
+    const response = await api.get('tipoProduto');
+    setTipoProduto(response.data);
+  }
+
   async function handleSubmit(data, { reset }) {
     try {
       await api.post('tipoProduto', data);
       toast.success('Tipo de Produto cadastrado com sucesso');
+      loadRefresh();
       reset();
     } catch (err) {
       toast.error(err.message);
@@ -47,6 +53,7 @@ export default function CadastrarTipoProduto() {
     try {
       await api.delete(`tipoProduto/${id}`);
       toast.success('Tipo de Produto deletado com sucesso');
+      loadRefresh();
     } catch (err) {
       toast.error(err.message);
     }
