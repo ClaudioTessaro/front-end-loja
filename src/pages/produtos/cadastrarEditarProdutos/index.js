@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Form } from '@unform/web';
@@ -17,6 +18,7 @@ export default function CadastrarEditarProdutos(path) {
   const [tipoProduto, setTipoProduto] = useState([]);
   const [produto, setProduto] = useState([]);
   const [visible, setVisible] = useState([]);
+  const [vendaVisible, setVendaVisible] = useState(true);
   const { id } = path.match.params;
 
   const { pathname } = path.location;
@@ -31,11 +33,15 @@ export default function CadastrarEditarProdutos(path) {
   useEffect(() => {
     async function loadProduto() {
       const response = await api.get(`/produto/${id}`);
-      const { dataDaCompra } = response.data;
+      const { valorVenda, dataDaCompra, porcentagemLucro } = response.data;
+      const valorDaVenda = valorVenda;
       const dataCompra = dataDaCompra.split('T')[0];
+      const porcentagemDeLucro = porcentagemLucro;
       setProduto({
         ...response.data,
         dataCompra,
+        valorDaVenda,
+        porcentagemDeLucro,
       });
     }
     loadProduto();
@@ -62,6 +68,10 @@ export default function CadastrarEditarProdutos(path) {
     } else {
       setVisible(false);
     }
+  }
+
+  function handleVendaVisible() {
+    setVendaVisible(!vendaVisible);
   }
 
   return (
@@ -150,18 +160,20 @@ export default function CadastrarEditarProdutos(path) {
           </div>
           <div className="form-group col-md-2">
             <Input
+              disabled={!vendaVisible}
               type="number"
               min="1"
-              name="porcentagemLucro"
+              name="porcentagemDeLucro"
               className="form-control"
-              id="porcentagemLucro"
+              id="porcentagemDeLucro"
               label="% de Lucro"
             />
           </div>
+
           <div className="form-group col-md-1" />
           <div className="form-group col-md-2">
             <Input
-              disabled={produto.valorVenda === undefined}
+              disabled={vendaVisible}
               type="number"
               name="valorDaVenda"
               className="form-control"
@@ -193,7 +205,21 @@ export default function CadastrarEditarProdutos(path) {
               step="any"
             />
           </div>
+          <div className="form-group col-md-3" style={{ marginLeft: '9px' }} />
+          <div className="form-check">
+            <Input
+              className="form-check-input"
+              type="checkbox"
+              id="gridCheck"
+              name="isVenda"
+              onChange={handleVendaVisible}
+            />
+            <label className="form-check-label" htmlFor="gridCheck">
+              Quero inserir o valor da venda
+            </label>
+          </div>
         </div>
+
         <ButtonStyle className="float-right">
           <Button variant="outline-secondary" size="lg" type="reset">
             Limpar
