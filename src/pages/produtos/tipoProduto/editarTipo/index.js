@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Form } from '@unform/web';
+import { Form, Input } from '@rocketseat/unform';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
 
 import Layout from '../../../../components/Layout_Basico';
-import Input from '../../../../components/Formulario/Input';
 import { ButtonStyle } from '../../visualizarProdutos/styles';
 
 import api from '../../../../services/api';
+import UtilService from '../../../../services/Util/index';
 import history from '../../../../services/history';
+
+const schema = Yup.object().shape({
+  nome: Yup.string().required('O nome é obrigatório'),
+});
 
 export default function EditarTipoProdutos(path) {
   const [produto, setProduto] = useState([]);
@@ -25,17 +30,17 @@ export default function EditarTipoProdutos(path) {
 
   async function handleUpdate(data) {
     try {
-      await api.put(`/tipoProduto/${id}`, data);
-      toast.success('Tipo de produto atualizado com sucesso');
+      const response = await api.put(`/tipoProduto/${id}`, data);
+      UtilService.retornoUtil(response);
       history.push('/tipoProdutos');
     } catch (err) {
-      toast.error(err);
+      toast.error('Problema com o servidor');
     }
   }
 
   return (
-    <Layout titulo="Editar o  Tipo Produto">
-      <Form initialData={produto} onSubmit={handleUpdate}>
+    <Layout titulo="Editar o Tipo Produto">
+      <Form schema={schema} initialData={produto} onSubmit={handleUpdate}>
         <div className="form-group col-md-4">
           <Input
             ype="text"

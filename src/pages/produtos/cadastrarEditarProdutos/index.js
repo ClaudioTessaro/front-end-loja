@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { Form } from '@unform/web';
+
 import { Scope } from '@unform/core';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
@@ -13,8 +14,10 @@ import { ButtonStyle } from '../visualizarProdutos/styles';
 import history from '../../../services/history';
 
 import api from '../../../services/api';
+import UtilService from '../../../services/Util/index';
 
 export default function CadastrarEditarProdutos(path) {
+  const formRef = useRef(null);
   const [tipoProduto, setTipoProduto] = useState([]);
   const [produto, setProduto] = useState([]);
   const [visible, setVisible] = useState([]);
@@ -33,6 +36,7 @@ export default function CadastrarEditarProdutos(path) {
   useEffect(() => {
     async function loadProduto() {
       const response = await api.get(`/produto/${id}`);
+
       const { valorVenda, dataDaCompra, porcentagemLucro } = response.data;
       const valorDaVenda = valorVenda;
       const dataCompra = dataDaCompra.split('T')[0];
@@ -48,16 +52,25 @@ export default function CadastrarEditarProdutos(path) {
   }, [id]);
 
   async function handleInsertSubmit(data, { reset }) {
-    await api.post('/produto', data);
-    reset();
+    try {
+      const response = await api.post('/produto', data);
+      UtilService.retornoUtil(response);
+      reset();
+    } catch (err) {
+      if (err.response) {
+        toast.error(err.response.data.message);
+      }
+    }
   }
   async function handleUpdateProduto(data) {
     try {
-      await api.put(`/produto/${id}`, data);
-      toast.success('Produto atualizado com sucesso');
+      const response = await api.put(`/produto/${id}`, data);
+      UtilService.retornoUtil(response);
       history.push('/visualizarProdutos');
     } catch (err) {
-      toast.error(err);
+      if (err.response) {
+        toast.error(err.response.data.message);
+      }
     }
   }
 
@@ -83,6 +96,7 @@ export default function CadastrarEditarProdutos(path) {
       }
     >
       <Form
+        ref={formRef}
         initialData={pathname === '/cadastrarProdutos' ? {} : produto}
         onSubmit={
           pathname === '/cadastrarProdutos'
@@ -98,6 +112,7 @@ export default function CadastrarEditarProdutos(path) {
               className="form-control"
               id="inputNome"
               label="Nome do Produto"
+              required
             />
           </div>
           <div className="form-group col-md-1" />
@@ -120,6 +135,7 @@ export default function CadastrarEditarProdutos(path) {
                 label="Tipo do Produto"
                 data={tipoProduto}
                 onChange={e => handlVisible(e)}
+                required
               />
             </Scope>
           </div>
@@ -133,6 +149,7 @@ export default function CadastrarEditarProdutos(path) {
               id="valorDaCompra"
               label="Valor da Compra do Produto"
               step="any"
+              required
             />
           </div>
           <div className="form-group col-md-2">
@@ -142,6 +159,7 @@ export default function CadastrarEditarProdutos(path) {
               className="form-control"
               id="inputNome"
               label="Quantidade"
+              required
             />
           </div>
           <div className="form-group col-md-1" />
@@ -156,6 +174,7 @@ export default function CadastrarEditarProdutos(path) {
               className="form-control"
               id="dataDaCompra"
               label="Data da compra"
+              required
             />
           </div>
           <div className="form-group col-md-2">
@@ -167,6 +186,7 @@ export default function CadastrarEditarProdutos(path) {
               className="form-control"
               id="porcentagemDeLucro"
               label="% de Lucro"
+              required={vendaVisible}
             />
           </div>
 
@@ -180,6 +200,7 @@ export default function CadastrarEditarProdutos(path) {
               id="valorDaVenda"
               label="Valor de venda"
               step="any"
+              required={!vendaVisible}
             />
           </div>
         </div>
@@ -193,6 +214,7 @@ export default function CadastrarEditarProdutos(path) {
               label="Valor do pote"
               step="any"
               disabled={visible}
+              required={!visible}
             />
           </div>
           <div className="form-group col-md-2">

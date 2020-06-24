@@ -15,6 +15,7 @@ import Select from '../../components/Formulario/Select';
 
 import { ButtonStyle, Tab } from '../produtos/visualizarProdutos/styles';
 import api from '../../services/api';
+import UtilService from '../../services/Util/index';
 
 export default function Venda() {
   const [clientes, setClientes] = useState([]);
@@ -47,34 +48,42 @@ export default function Venda() {
   }, []);
 
   async function handleSubmit(data, { reset }) {
-    const [
-      { quantidadeDeCompra, dataCompra, status },
-      { nomeCliente },
-      { nomeProduto },
-    ] = [
-      data,
-      { nomeCliente: autoCompleteCliente[0] },
-      { nomeProduto: autoCompleteProduto[0] },
-    ];
-    await await api.post('venda', {
-      quantidadeDeCompra,
-      dataCompra,
-      status,
-      nomeCliente,
-      nomeProduto,
-    });
-
-    const cliente = await api.get(`cliente/${nomeCliente}/${dataCompra}`);
-    setListaProdutos(cliente.data);
-    reset();
+    try {
+      const [
+        { quantidadeDeCompra, dataCompra, status },
+        { nomeCliente },
+        { nomeProduto },
+      ] = [
+        data,
+        { nomeCliente: autoCompleteCliente[0] },
+        { nomeProduto: autoCompleteProduto[0] },
+      ];
+      const response = await await api.post('venda', {
+        quantidadeDeCompra,
+        dataCompra,
+        status,
+        nomeCliente,
+        nomeProduto,
+      });
+      UtilService.retornoUtil(response);
+      const cliente = await api.get(`cliente/${nomeCliente}/${dataCompra}`);
+      setListaProdutos(cliente.data);
+      reset();
+    } catch (err) {
+      if (err.response) {
+        toast.error(err.response.data.message);
+      }
+    }
   }
 
   async function handleDelete(id) {
     try {
-      await api.delete(`venda/${id}`);
-      toast.success('Venda deletada com sucesso');
+      const response = await api.delete(`venda/${id}`);
+      UtilService.retornoUtil(response);
     } catch (err) {
-      toast.error(err.message);
+      if (err.response) {
+        toast.error(err.response.data.message);
+      }
     }
   }
 
@@ -91,6 +100,7 @@ export default function Venda() {
               onChange={e => setAutoCompleteCliente(e)}
               minLength={1}
               emptyLabel="Sem resultados"
+              inputProps={{ required: true }}
             />
           </div>
           <div className="form-group col-sm-1" />
@@ -103,6 +113,7 @@ export default function Venda() {
               onChange={e => setAutoCompleteProduto(e)}
               minLength={1}
               emptyLabel="Sem resultados"
+              inputProps={{ required: true }}
             />
           </div>
           <div className="form-group col-sm-1" />
@@ -126,6 +137,7 @@ export default function Venda() {
               className="form-control"
               id="dataDaCompra"
               label="Data da compra"
+              required
             />
           </div>
           <div className="form-group col-sm-2">
@@ -177,6 +189,7 @@ export default function Venda() {
                   <th scope="col">Excluir</th>
                 </tr>
               </thead>
+
               <tbody>
                 {listaProdutos.map(item => (
                   <tr key={item.id}>

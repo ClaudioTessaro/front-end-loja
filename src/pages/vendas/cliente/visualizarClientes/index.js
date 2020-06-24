@@ -14,6 +14,7 @@ import { ButtonStyle, Tab } from '../../../produtos/visualizarProdutos/styles';
 import * as actions from '../../../../store/modules/clientes/action';
 
 import api from '../../../../services/api';
+import UtilService from '../../../../services/Util/index';
 
 export default function VisualizarClientes() {
   const [clientes, setClientes] = useState([]);
@@ -40,11 +41,13 @@ export default function VisualizarClientes() {
 
   async function handleDelete(id) {
     try {
-      await api.delete(`cliente/${id}`);
-      toast.success('Cliente deletado com sucesso');
+      const response = await api.delete(`cliente/${id}`);
+      UtilService.retornoUtil(response);
       loadRefresh();
     } catch (err) {
-      toast.error(err.message);
+      if (err.response) {
+        toast.error(err.response.data.message);
+      }
     }
   }
 

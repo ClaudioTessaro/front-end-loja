@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-plusplus */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
@@ -15,10 +19,15 @@ import { ButtonStyle, Tab } from './styles';
 import * as actions from '../../../store/modules/produtos/action';
 
 import api from '../../../services/api';
+import UtilService from '../../../services/Util/index';
 
 export default function VisualizarProdutos({ location }) {
   const [tipoProduto, setTipoProduto] = useState([]);
   const [produto, setProduto] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(5);
+  const [pages, setPages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -40,14 +49,20 @@ export default function VisualizarProdutos({ location }) {
       const { dataFim, dataInicio, nome, tipo } = queryString.parse(
         location.search
       );
-
       const produtos = await api.get(
-        `/produtos?nome=${nome}&tipo=${tipo}&dataInicio=${dataInicio}&dataFim=${dataFim}`
+        `/produtos?page=${currentPage}&limit=${limit}&nome=${nome}&tipo=${tipo}&dataInicio=${dataInicio}&dataFim=${dataFim}`
       );
+      setTotal(produtos.headers['x-total-count']);
+      const totalPages = Math.ceil(total / limit);
+      const arrayPages = [];
+      for (let i = 1; i <= totalPages; i++) {
+        arrayPages.push(i);
+      }
+      setPages(arrayPages);
       setProduto(produtos.data);
     }
     loadProdutos();
-  }, [location.search]);
+  }, [location.search, currentPage, limit, total]);
 
   async function loadRefresh() {
     const { dataFim, dataInicio, nome, tipo } = queryString.parse(
@@ -61,11 +76,13 @@ export default function VisualizarProdutos({ location }) {
 
   async function handleDelete(id) {
     try {
-      await api.delete(`produto/${id}`);
-      toast.success('Produto deletado com sucesso');
+      const response = await api.delete(`produto/${id}`);
+      UtilService.retornoUtil(response);
       loadRefresh();
     } catch (err) {
-      toast.error(err.message);
+      if (err.response) {
+        toast.error(err.response.data.message);
+      }
     }
   }
 
@@ -125,6 +142,17 @@ export default function VisualizarProdutos({ location }) {
           </Button>
         </ButtonStyle>
         <Tab>
+          <caption>Quantidade</caption>
+          <select
+            onChange={e => setLimit(e.target.value)}
+            className="form-control form-control-sm"
+            style={{ width: '70px' }}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="100">100</option>
+          </select>
           <div className="table-responsive">
             <table className="table">
               <caption>Lista dos Produtos</caption>
@@ -173,6 +201,44 @@ export default function VisualizarProdutos({ location }) {
             </table>
           </div>
         </Tab>
+        <nav aria-label="Page navigation example">
+          <ul className="pagination justify-content-end">
+            {currentPage > 1 && (
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  aria-label="Previous"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            )}
+            {pages.map(page => (
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  isselect={page === currentPage}
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </a>
+              </li>
+            ))}
+            {currentPage < pages.length && (
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  aria-label="Next"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
       </Form>
     </Layout>
   );

@@ -1,14 +1,21 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-plusplus */
 /* eslint-disable no-unused-expressions */
 import React, { useState, useEffect } from 'react';
 import { BsPencil, BsFillTrashFill } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
-import { Form } from '@unform/web';
+import { Form, Input } from '@rocketseat/unform';
+import * as Yup from 'yup';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import Layout from '../../../components/Layout_Basico';
-import Input from '../../../components/Formulario/Input';
+
 import api from '../../../services/api';
+import UtilService from '../../../services/Util/index';
 
 import * as actions from '../../../store/modules/produtos/action';
 
@@ -16,12 +23,28 @@ import { ButtonStyle } from '../visualizarProdutos/styles';
 
 import { Tab } from './styles';
 
+const schema = Yup.object().shape({
+  nome: Yup.string().required('O nome é obrigatório'),
+});
 export default function CadastrarTipoProduto() {
   const [tipoProduto, setTipoProduto] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(5);
+  const [pages, setPages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
 
   async function loadTipo() {
-    const response = await api.get('tipoProduto');
+    const response = await api.get(
+      `tipoProduto?page=${currentPage}&limit=${limit}`
+    );
+    setTotal(response.headers['x-total-count']);
+    const totalPages = Math.ceil(total / limit);
+    const arrayPages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      arrayPages.push(i);
+    }
+    setPages(arrayPages);
     setTipoProduto(response.data);
   }
 
@@ -31,39 +54,41 @@ export default function CadastrarTipoProduto() {
 
   useEffect(() => {
     loadTipo();
-  }, []);
-
-  async function loadRefresh() {
-    const response = await api.get('tipoProduto');
-    setTipoProduto(response.data);
-  }
+  }, [currentPage, limit, total]);
 
   async function handleSubmit(data, { reset }) {
     try {
-      await api.post('tipoProduto', data);
-      toast.success('Tipo de Produto cadastrado com sucesso');
-      loadRefresh();
+      const response = await api.post('tipoProduto', data);
+      UtilService.retornoUtil(response);
+      loadTipo();
       reset();
     } catch (err) {
-      toast.error(err.message);
+      if (err instanceof Yup.ValidationError) {
+        const errorMessages = {};
+        err.inner.forEach(error => {
+          errorMessages[error.path] = error.message;
+        });
+      } else if (err.response) {
+        toast.error(err.response.data.message);
+      }
     }
   }
 
   async function handleDelete(id) {
     try {
-      await api.delete(`tipoProduto/${id}`);
-      toast.success('Tipo de Produto deletado com sucesso');
-      loadRefresh();
+      const response = await api.delete(`tipoProduto/${id}`);
+      UtilService.retornoUtil(response);
+      loadTipo();
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.response.data.message);
     }
   }
   return (
     <Layout titulo="Cadastrar Tipo Produto">
-      <Form onSubmit={handleSubmit}>
+      <Form schema={schema} onSubmit={handleSubmit}>
         <div className="form-group col-md-4">
           <Input
-            ype="text"
+            type="text"
             name="nome"
             className="form-control"
             id="inputNome"
@@ -94,6 +119,19 @@ export default function CadastrarTipoProduto() {
           </Button>
         </Link>
         <Tab>
+          <caption>Quantidade</caption>
+
+          <select
+            className="form-control form-control-sm"
+            style={{ width: '70px' }}
+            onChange={e => setLimit(e.target.value)}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="100">100</option>
+          </select>
+
           <div className="table-responsive">
             <table className="table">
               <caption>Lista dos tipos de Produtos</caption>
@@ -132,6 +170,44 @@ export default function CadastrarTipoProduto() {
             </table>
           </div>
         </Tab>
+        <nav aria-label="Page navigation example">
+          <ul className="pagination justify-content-end">
+            {currentPage > 1 && (
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  aria-label="Previous"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            )}
+            {pages.map(page => (
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  isselect={page === currentPage}
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </a>
+              </li>
+            ))}
+            {currentPage < pages.length && (
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  aria-label="Next"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
       </Form>
     </Layout>
   );
