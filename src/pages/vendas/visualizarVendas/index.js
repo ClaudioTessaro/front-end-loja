@@ -1,6 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-unused-expressions */
 import React, { useEffect, useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { Link } from 'react-router-dom';
@@ -44,7 +48,7 @@ export default function VisualizarVendas() {
       <Form onSubmit={handleSubmit}>
         <div className="form-row">
           <div className="form-group col-sm-4">
-            <label>Nome do Cliente</label>
+            <label htmlFor="nome">Nome do Cliente</label>
             <Typeahead
               id="input-size-example"
               labelKey="name"

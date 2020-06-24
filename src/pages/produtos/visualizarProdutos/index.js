@@ -126,18 +126,13 @@ export default function VisualizarProdutos({ location }) {
           </Form.Group>
         </Form.Row>
         <ButtonStyle className="float-right">
-          <Button variant="outline-secondary" size="lg" type="reset">
+          <Button variant="outline-secondary" type="reset">
             Limpar
           </Button>
-          <Button
-            variant="success"
-            size="lg"
-            type="button"
-            onClick={handleInsert}
-          >
+          <Button variant="success" type="button" onClick={handleInsert}>
             Incluir
           </Button>
-          <Button variant="primary" size="lg" type="submit">
+          <Button variant="primary" type="submit">
             Pesquisar
           </Button>
         </ButtonStyle>
@@ -150,8 +145,6 @@ export default function VisualizarProdutos({ location }) {
           >
             <option value="5">5</option>
             <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="100">100</option>
           </select>
           <div className="table-responsive">
             <table className="table">

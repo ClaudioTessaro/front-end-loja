@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  height: 100%;
+  height: 140%;
   background: #e9ecef;
 
   span:not(.MuiIconButton-label) {

@@ -74,6 +74,16 @@ export default function Header() {
               Consultar Vendas
             </DropdownItem>
           </DropdownButton>
+          <DropdownButton
+            variant="Secondary"
+            id="button-drop-right"
+            drop="right"
+            title="Compra"
+          >
+            <DropdownItem as={Link} to="/compra">
+              Atualizar Estoque
+            </DropdownItem>
+          </DropdownButton>
           <DropdownItem>
             <IconButton onClick={handleLogout}>
               <ExitToAppOutlinedIcon />

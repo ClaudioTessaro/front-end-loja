@@ -1,7 +1,10 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-unused-expressions */
+import React, { useState, useEffect } from 'react';
 import { BsPencil, BsFillTrashFill } from 'react-icons/bs';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -18,14 +21,17 @@ import UtilService from '../../../../services/Util/index';
 
 export default function VisualizarClientes() {
   const [clientes, setClientes] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(5);
+  const [pages, setPages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const history = useHistory();
   const dispatch = useDispatch();
 
   async function handleSubmit(data, { reset }) {
     const response = [];
-
     if (data.nomeCliente === '') {
-      response.push(await api.get('clientes'));
+      response.push(await api.get(`clientes`));
       setClientes(response[0].data);
     } else {
       response.push(await api.get(`nomeCliente/${data.nomeCliente}`));
@@ -33,6 +39,24 @@ export default function VisualizarClientes() {
     }
     reset();
   }
+
+  async function pagination() {
+    const response = await api.get(
+      `clientes?page=${currentPage}&limit=${limit}`
+    );
+    setTotal(response.headers['x-total-count']);
+    const totalPages = Math.ceil(total / limit);
+    const arrayPages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      arrayPages.push(i);
+    }
+    setPages(arrayPages);
+    setClientes(response.data);
+  }
+
+  useEffect(() => {
+    pagination();
+  }, [currentPage, limit, total]);
 
   async function loadRefresh() {
     const response = await api.get('clientes');
@@ -93,6 +117,17 @@ export default function VisualizarClientes() {
           </Button>
         </ButtonStyle>
         <Tab>
+          <caption>Quantidade</caption>
+
+          <select
+            className="form-control form-control-sm"
+            style={{ width: '70px' }}
+            onChange={e => setLimit(e.target.value)}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+          </select>
+
           <div className="table-responsive">
             <table className="table">
               <caption>Lista dos Clientes</caption>
@@ -130,6 +165,45 @@ export default function VisualizarClientes() {
               </tbody>
             </table>
           </div>
+
+          <nav aria-label="Page navigation example">
+            <ul className="pagination justify-content-end">
+              {currentPage > 1 && (
+                <li className="page-item">
+                  <a
+                    className="page-link"
+                    aria-label="Previous"
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+              )}
+              {pages.map(page => (
+                <li className="page-item">
+                  <a
+                    className="page-link"
+                    isselect={page === currentPage}
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </a>
+                </li>
+              ))}
+              {currentPage < pages.length && (
+                <li className="page-item">
+                  <a
+                    className="page-link"
+                    aria-label="Next"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              )}
+            </ul>
+          </nav>
         </Tab>
       </Form>
     </Layout>

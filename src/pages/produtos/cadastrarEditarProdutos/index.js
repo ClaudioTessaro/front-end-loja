@@ -243,15 +243,10 @@ export default function CadastrarEditarProdutos(path) {
         </div>
 
         <ButtonStyle className="float-right">
-          <Button variant="outline-secondary" size="lg" type="reset">
+          <Button variant="outline-secondary" type="reset">
             Limpar
           </Button>
-          <Button
-            className="float-right"
-            variant="primary"
-            size="lg"
-            type="submit"
-          >
+          <Button className="float-right" variant="primary" type="submit">
             Enviar
           </Button>
         </ButtonStyle>
@@ -259,7 +254,6 @@ export default function CadastrarEditarProdutos(path) {
           <Button
             style={({ height: '40px' }, { margin: '7px 0px' })}
             variant="success"
-            size="lg"
             type="button"
           >
             Voltar

@@ -12,6 +12,7 @@ import Cliente from '../pages/vendas/cliente';
 import Venda from '../pages/vendas';
 import VisualizarVendas from '../pages/vendas/visualizarVendas';
 import VisualizarClientes from '../pages/vendas/cliente/visualizarClientes';
+import Compra from '../pages/compras';
 
 export default function Routes() {
   return (
@@ -50,6 +51,7 @@ export default function Routes() {
         component={VisualizarClientes}
         isPrivate
       />
+      <Route path="/compra" component={Compra} isPrivate />
     </Switch>
   );
 }
