@@ -147,7 +147,7 @@ export default function CadastrarEditarProdutos(path) {
               name="valorCompra"
               className="form-control"
               id="valorDaCompra"
-              label="Valor da Compra do Produto"
+              label="Valor da Compra"
               step="any"
               required
             />
